@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Image\Icons\Bluetooth.png" />
+    <None Remove="Image\Icons\Clock.png" />
+    <None Remove="Image\Icons\ClockPage.png" />
+    <None Remove="Image\Icons\Connected.png" />
+    <None Remove="Image\Icons\Disconnected.png" />
+    <None Remove="Image\Icons\Food.png" />
+    <None Remove="Image\Icons\FoodWhite.png" />
+    <None Remove="Image\Icons\PageConnection.png" />
+    <None Remove="Image\Icons\PageWater.png" />
+    <None Remove="Image\Icons\WaterWhite.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="32feet.NET" Version="3.5.0" />
+    <PackageReference Include="HandyControl" Version="3.5.1" />
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Image\Icons\Bluetooth.png" />
+    <Resource Include="Image\Icons\Clock.png" />
+    <Resource Include="Image\Icons\ClockPage.png" />
+    <Resource Include="Image\Icons\Connected.png" />
+    <Resource Include="Image\Icons\Disconnected.png" />
+    <Resource Include="Image\Icons\Food.png" />
+    <Resource Include="Image\Icons\FoodWhite.png" />
+    <Resource Include="Image\Icons\PageConnection.png" />
+    <Resource Include="Image\Icons\PageWater.png" />
+    <Resource Include="Image\Icons\WaterWhite.png" />
+  </ItemGroup>
+
+</Project>
