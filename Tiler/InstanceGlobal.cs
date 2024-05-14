@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 namespace TilerMain
@@ -43,8 +47,7 @@ namespace TilerMain
 
         public async static Task<bool> ReFreshPackage() 
         {
-            int code = await BluetoothContent.SendDataAsync(["0"]);
-
+            int code = BluetoothContent.SendData(["0"]);
             if (code == 1)
             {
                 ShowMessage("数据刷新出错");
@@ -52,13 +55,52 @@ namespace TilerMain
             }
 
             WholeDataPackage = new DataPackage(await BluetoothContent.ReceiveDataAsync());
-            
             if (WholeDataPackage.IsError)
             {
                 ShowMessage("数据出错");
                 return false;
             }
             return true;
+        }
+        public static Thread CheckThread { get; set; }
+        public static ManualResetEventSlim ResetEvent { get; set; } = new(true);
+        public static void RefreshDataLoop()
+        {
+            CheckThread = new(async () =>
+            {
+                while (IsConnected)
+                {
+                    try 
+                    {
+                        if (!await ReFreshPackage()) 
+                        {
+                            throw new Exception();
+                        };
+                        ResetEvent.Wait();
+                        MainWindow.systemTimePage.UpdataFromFlash();
+                        //MainWindow.waterPage.UpdataFromFlash();
+                        await Task.Delay(1000);
+                        if (!IsConnected) break;
+                    }
+                    catch(Exception) 
+                    {
+                        IsConnected = false;
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MainWindow.homePage.ScrollZone.Visibility = Visibility.Hidden;
+                            MainWindow.homePage.ConnectedStateLable.Content = "======链接中断======";
+                            ShowMessage("链接中断");
+                            BitmapImage bitmapImage = new(new Uri("pack://application:,,,/TilerMain;component/Image/Icons/Disconnected.png"));
+                            MainWindow.homePage.ConnectedImage.Source = bitmapImage;
+                            MainWindow.ActionFrame.Navigate(MainWindow.homePage);
+                            Animation.PageSilderMoveing(MainWindow.Silder, 9);
+                            MainWindow.RefreshFrame();
+                        });
+                        break;
+                    }
+                }
+            });
+            CheckThread.Start();
         }
     }
 }

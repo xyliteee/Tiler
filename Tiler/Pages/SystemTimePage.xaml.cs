@@ -27,13 +27,13 @@ namespace TilerMain.Pages
         private int systemDay;
         private int systemHour;
         private int systemMinute;
-        private bool isEditing = false;
+        
         public SystemTimePage()
         {
             InitializeComponent();
         }
 
-        private void UpdataFromFlash() 
+        public void UpdataFromFlash() 
         {
             systemYear = InstanceGlobal.WholeDataPackage.SystemYear;
             systemMonth = InstanceGlobal.WholeDataPackage.SystemMonth;
@@ -65,19 +65,6 @@ namespace TilerMain.Pages
                 DateLable.Content = $"{systemYear + 2000}年{systemMonth}月{systemDay}日";
             });
         }
-        public void CheckTime() 
-        {
-            Task.Run(async () =>
-            {
-                while (InstanceGlobal.IsConnected && !isEditing)
-                {
-                    await InstanceGlobal.ReFreshPackage();
-                    UpdataFromFlash();
-                    await Task.Delay(1000);
-                    if (!InstanceGlobal.IsConnected) break;
-                }
-            });
-        }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
@@ -96,12 +83,10 @@ namespace TilerMain.Pages
                     _ => 31,
                 };
             }
-            isEditing = true;
+            
             Feedback feedback = TilerMessageBox.ShowMessageBoxWithInput("请按照如下格式修改时间\n年-月-日-时-分",$"{systemYear}-{systemMonth}-{systemDay}-{systemHour}-{systemMinute}");
             if (!feedback.IsYes) 
             {
-                isEditing = false;
-                CheckTime();
                 return;
             }
             string input = feedback.Input;
@@ -132,28 +117,21 @@ namespace TilerMain.Pages
             catch (Exception)
             {
                 InstanceGlobal.ShowMessage("格式有误");
-                isEditing = false;
-                CheckTime();
                 return;
             }
 
             InstanceGlobal.ShowMessage("设置中......");
+
             int code = await BluetoothContent.SendDataAsync([year, month, day, hour, minute]);
             bool isSuccessful = await BluetoothContent.GetPakcageSucessful();
             if (code == 1 || !isSuccessful)
             {
                 InstanceGlobal.ShowMessage("数据传输出错");
-                isEditing = false;
-                CheckTime();
                 return;
             }
 
-            if (await InstanceGlobal.ReFreshPackage()) 
-            {
-                InstanceGlobal.ShowMessage("设定成功");
-                isEditing = false;
-                CheckTime();
-            };
+            InstanceGlobal.ShowMessage("设定成功");
+            
         }
     }
 }

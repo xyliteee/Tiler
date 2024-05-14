@@ -29,27 +29,30 @@ namespace TilerMain.Pages
             InitializeComponent();
         }
 
-
         public void UpdataFromFlash() 
         {
-            WaterSlider.Value = InstanceGlobal.WholeDataPackage.FoodThreshold;
-            isAuto = InstanceGlobal.WholeDataPackage.FoodAuto;
-            if (isAuto == 2)
+            Dispatcher.Invoke(() => 
             {
-                AutoLable.Content = "自动：关";
-                Animation.RightMoving(BorderCirlce, null, 53);
-            }
-            else if (isAuto == 1)
-            {
-                AutoLable.Content = "自动：开";
-                Animation.RightMoving(BorderCirlce, null, 3);
-            }
+                WaterSlider.Value = InstanceGlobal.WholeDataPackage.FoodThreshold;
+                isAuto = InstanceGlobal.WholeDataPackage.FoodAuto;
+                if (isAuto == 2)
+                {
+                    AutoLable.Content = "自动：关";
+                    Animation.RightMoving(BorderCirlce, null, 53);
+                }
+                else if (isAuto == 1)
+                {
+                    AutoLable.Content = "自动：开";
+                    Animation.RightMoving(BorderCirlce, null, 3);
+                }
+            });
         }
 
         private async void DeterminationButton_Click(object sender, RoutedEventArgs e)
         {
             InstanceGlobal.ShowMessage("设置中......");
             int code = await BluetoothContent.SendDataAsync([foodThreshold.ToString(), isAuto.ToString()]);
+            
             bool isSuccessful = await BluetoothContent.GetPakcageSucessful();
             if (code == 1 || !isSuccessful)
             {

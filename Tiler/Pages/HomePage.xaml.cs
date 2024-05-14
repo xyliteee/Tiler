@@ -65,7 +65,6 @@ namespace TilerMain.Pages
                         if (es.Message.Contains("主机没有反应")) errorMessage = $"设备[{bluetoothDeviceInfo.DeviceName}]未响应：该设备被占用或未开启";
                         else if (es.Message.Contains("该请求的地址无效")) errorMessage = $"设备[{bluetoothDeviceInfo.DeviceName}]请求地址无效：该设备可能不需要被链接";
                         else errorMessage = es.Message;
-                        Debug.WriteLine(es.Message);
                         ConnectedStateLable.Content = errorMessage;
                         button.IsEnabled = true;
                     });
@@ -81,14 +80,18 @@ namespace TilerMain.Pages
                 BitmapImage bitmapImage = new(new Uri("pack://application:,,,/TilerMain;component/Image/Icons/Connected.png"));
                 ConnectedButton.Content = "断开链接";
                 ConnectedImage.Source = bitmapImage;
-                CheckConnection();
+                //CheckConnection();
                 InstanceGlobal.ShowMessage("正在获取数据");
 
-                if (await InstanceGlobal.ReFreshPackage()) 
+                await InstanceGlobal.ReFreshPackage();
+                InstanceGlobal.MainWindow.waterPage.UpdataFromFlash();
+
+
+                InstanceGlobal.RefreshDataLoop();
+                //InstanceGlobal.RefreshDataLoop();
+                if (InstanceGlobal.CheckThread.ThreadState == System.Threading.ThreadState.Running) 
                 {
-                    InstanceGlobal.MainWindow.waterPage.UpdataFromFlash();
-                    InstanceGlobal.MainWindow.systemTimePage.CheckTime();
-                    InstanceGlobal.ShowMessage("数据获取完成");
+                    InstanceGlobal.ShowMessage("数据成功握手");
                 }
             }
         }
