@@ -3,6 +3,7 @@ using System.IO.Ports;
 using System.Diagnostics;
 using TilerMain.Pages;
 using System.Windows.Automation;
+using System.Windows.Media;
 
 
 namespace TilerMain
@@ -15,12 +16,14 @@ namespace TilerMain
         public readonly HomePage homePage;
         public readonly WaterPage waterPage;
         public readonly SystemTimePage systemTimePage;
+        public readonly FeedingTimePage feedingTimePag;
         public MainWindow()
         {
             InitializeComponent();
             homePage = new();
             waterPage = new();
             systemTimePage = new();
+            feedingTimePag = new();
             ActionFrame.Navigate(homePage);
             InstanceGlobal.MainWindow = this;
         }
@@ -82,6 +85,35 @@ namespace TilerMain
                 ActionFrame.Navigate(systemTimePage);
 
                 Animation.PageSilderMoveing(Silder, 109);
+                RefreshFrame();
+            }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                homePage.CacheMode = null;
+                waterPage.CacheMode = null;
+                systemTimePage.CacheMode = null;
+                feedingTimePag.CacheMode = null;
+            }
+            else 
+            {
+                homePage.CacheMode = new BitmapCache();
+                waterPage.CacheMode = new BitmapCache();
+                systemTimePage.CacheMode = new BitmapCache();
+                feedingTimePag.CacheMode= new BitmapCache();
+            }
+        }
+
+        private void FeddingTimeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ActionFrame.Content != feedingTimePag && InstanceGlobal.IsConnected)
+            {
+                ActionFrame.Navigate(feedingTimePag);
+
+                Animation.PageSilderMoveing(Silder, 159);
                 RefreshFrame();
             }
         }

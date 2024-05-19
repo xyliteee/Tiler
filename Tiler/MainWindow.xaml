@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TilerMain"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="600" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" StateChanged="Window_StateChanged">
     <WindowChrome.WindowChrome>
         <WindowChrome
          ResizeBorderThickness="0"
@@ -29,7 +29,11 @@
 
                 <Button x:Name="SystemTimeButton" Width="50" Height="50" Style="{StaticResource LeftBarButton}" Click="SystemTimeButton_Click" Canvas.Top="100"/>
                 <Image Width="32" Height="32" Canvas.Top="109" Canvas.Left="9" Source="/Image/Icons/ClockPage.png" IsHitTestVisible="False"/>
-                
+
+                <Button x:Name="FeddingTimeButton" Width="50" Height="50" Style="{StaticResource LeftBarButton}" Click="FeddingTimeButton_Click" Canvas.Top="150"/>
+                <Image Width="32" Height="32" Canvas.Top="159" Canvas.Left="9" Source="/Image/Icons/FeedingTimeButton.png" IsHitTestVisible="False"/>
+
+
                 <Border x:Name="Silder"  Background="#222222" Width="5" Height="30" Canvas.Top="10" CornerRadius="2" IsHitTestVisible="False"/>
             </Canvas>
             <Frame x:Name="ActionFrame" Width="750" Canvas.Left="50" Height="570" Canvas.Right="0" Canvas.Bottom="0" BorderThickness="0" NavigationUIVisibility="Hidden"/>

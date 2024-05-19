@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -54,10 +55,10 @@ namespace TilerMain
                 return false;
             }
 
-            WholeDataPackage = new DataPackage(await BluetoothContent.ReceiveDataAsync());
+            byte[] data = await BluetoothContent.ReceiveDataAsync();
+            WholeDataPackage = new DataPackage(data);
             if (WholeDataPackage.IsError)
             {
-                ShowMessage("数据出错");
                 return false;
             }
             return true;
@@ -78,7 +79,7 @@ namespace TilerMain
                         };
                         ResetEvent.Wait();
                         MainWindow.systemTimePage.UpdataFromFlash();
-                        //MainWindow.waterPage.UpdataFromFlash();
+                        MainWindow.feedingTimePag.UpdataFromFlash();
                         await Task.Delay(1000);
                         if (!IsConnected) break;
                     }
@@ -89,7 +90,6 @@ namespace TilerMain
                         {
                             MainWindow.homePage.ScrollZone.Visibility = Visibility.Hidden;
                             MainWindow.homePage.ConnectedStateLable.Content = "======链接中断======";
-                            ShowMessage("链接中断");
                             BitmapImage bitmapImage = new(new Uri("pack://application:,,,/TilerMain;component/Image/Icons/Disconnected.png"));
                             MainWindow.homePage.ConnectedImage.Source = bitmapImage;
                             MainWindow.ActionFrame.Navigate(MainWindow.homePage);

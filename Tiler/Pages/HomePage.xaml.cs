@@ -85,10 +85,10 @@ namespace TilerMain.Pages
 
                 await InstanceGlobal.ReFreshPackage();
                 InstanceGlobal.MainWindow.waterPage.UpdataFromFlash();
+               
 
 
                 InstanceGlobal.RefreshDataLoop();
-                //InstanceGlobal.RefreshDataLoop();
                 if (InstanceGlobal.CheckThread.ThreadState == System.Threading.ThreadState.Running) 
                 {
                     InstanceGlobal.ShowMessage("数据成功握手");

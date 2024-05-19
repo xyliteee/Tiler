@@ -7,7 +7,7 @@
       xmlns:hc="https://handyorg.github.io/handycontrol"
       mc:Ignorable="d" 
       d:DesignHeight="570" d:DesignWidth="750"
-      Title="WaterPage" CacheMode="BitmapCache">
+      Title="WaterPage">
 
     <Grid>
         <Canvas Width="750" Height="570" Background="#222222">
